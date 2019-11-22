@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return (
+    return (
       knex.schema
         .createTable('zoos', tbl => {
             tbl.increments()
@@ -22,23 +22,35 @@ exports.up = function(knex) {
                 .unsigned()
                 .notNullable()
                 .references('species.id')
+                .onDelete('CASCADE')
+                .onUpdate('CASCADE')
         })
         .createTable('zoo_animals', tbl => {
             tbl.integer('zoo_id')
                 .unsigned()
                 .notNullable()
                 .references('zoos.id')
+                .onDelete('CASCADE')
+                .onUpdate('CASCADE')
             
             tbl.integer('animal_id')
                 .unsigned()
                 .notNullable()
                 .references('animals.id')
+                .onDelete('CASCADE')
+                .onUpdate('CASCADE')
 
             tbl.primary(['zoo_id', 'animal_id'])
         })
-  )
+    )
 };
 
 exports.down = function(knex) {
-  
+    return (
+        knex.schema
+            .dropTableIfExists('zoo_animals')
+            .dropTableIfExists('animals')
+            .dropTableIfExists('species')
+            .dropTableIfExists('zoos')
+    )
 };
